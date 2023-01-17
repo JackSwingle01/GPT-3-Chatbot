@@ -30,7 +30,7 @@ def read_json_file(filename):
 
 # makes api call to openai and returns the completion
 # saves the prompt and response to a file
-def get_completion(prompt, model="text-davinci-003", temperature=.7, max_tokens=500, stop=["USER:", "ATHENA:"]):
+def get_completion(prompt, model="text-davinci-003", temperature=.7, max_tokens=500, stop=None):
 
     response = openai.Completion.create(
         model=model,
@@ -134,7 +134,7 @@ if __name__ == "__main__":
                 "<<NOTES>>", "*This is the first message, there are no notes yet.*").replace("<<RECENT>>", "*This is the first message, there are no recent messages yet.*")
 
         # generate response, vectorize it, and save it to a file as json
-        output = get_completion(prompt)
+        output = get_completion(prompt, temperature=.7 ,stop=["USER:", "ATHENA:"])
         vector = vector_embedding(output)
         info = {"speaker": "ATHENA", "time": time(), "vector": vector,
                 "text": output, "uuid": str(uuid4())}
