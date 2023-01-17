@@ -15,16 +15,14 @@ def read_file(filename):
     with open(filename, 'r', encoding="utf-8") as f:
         return f.read()
 
+
 # saves a json file
-
-
 def write_json_file(filename, data):
     with open(filename, 'w', encoding="utf-8") as f:
         return json.dump(data, f, indent=4, ensure_ascii=False, sort_keys=True)
 
+
 # loads a json file
-
-
 def read_json_file(filename):
     with open(filename, 'r', encoding="utf-8") as f:
         return json.load(f)
@@ -32,7 +30,7 @@ def read_json_file(filename):
 
 # makes api call to openai and returns the completion
 # saves the prompt and response to a file
-def get_completion(prompt, model="text-davinci-003", temperature=.1, max_tokens=200, stop=["USER:", "ATHENA:"]):
+def get_completion(prompt, model="text-davinci-003", temperature=.7, max_tokens=500, stop=["USER:", "ATHENA:"]):
 
     response = openai.Completion.create(
         model=model,
@@ -123,14 +121,17 @@ if __name__ == "__main__":
 
         # Load conversation
         conversation = load_conversation()
-
         # compose prompt
-        memories = fetch_memories(vector, conversation, 10)
-        # TODO - fetch declarative memories (facts, wikis, KB, company data, internet, etc)
-        notes = summarize_memories(memories)
-        recent = get_recent_messages(conversation, 3)
-        prompt = read_file("prompt_response.txt").replace(
-            "<<NOTES>>", notes).replace("<<RECENT>>", recent)
+        if len(conversation) > 1:
+            memories = fetch_memories(vector, conversation, 10)
+            # TODO - fetch declarative memories (facts, wikis, KB, company data, internet, etc)
+            notes = summarize_memories(memories)
+            recent = get_recent_messages(conversation, 3)
+            prompt = read_file("prompt_response.txt").replace(
+                "<<NOTES>>", notes).replace("<<RECENT>>", recent)
+        else:
+            prompt = read_file("prompt_response.txt").replace(
+                "<<NOTES>>", "*This is the first message, there are no notes yet.*").replace("<<RECENT>>", "*This is the first message, there are no recent messages yet.*")
 
         # generate response, vectorize it, and save it to a file as json
         output = get_completion(prompt)
