@@ -108,7 +108,7 @@ def get_recent_messages(conversation, n):
 
 if __name__ == "__main__":
 
-    openai.api_key = "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"
+    openai.api_key = read_file("API_KEY_PRIVATE.txt")
 
     while True:
         # Get user input, vectorize it, and save it to a file as json
