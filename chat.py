@@ -126,7 +126,7 @@ if __name__ == "__main__":
             memories = fetch_memories(vector, conversation, 10)
             # TODO - fetch declarative memories (facts, wikis, KB, company data, internet, etc)
             notes = summarize_memories(memories)
-            recent = get_recent_messages(conversation, 3)
+            recent = get_recent_messages(conversation, 4)
             prompt = read_file("prompt_response.txt").replace(
                 "<<NOTES>>", notes).replace("<<RECENT>>", recent)
         else:
@@ -142,4 +142,4 @@ if __name__ == "__main__":
         write_json_file(f"vector_logs/{filename}", info)
 
         # print output
-        print(f"\n\nATHENA: {output}\n\n")
+        print(f"\n\nBOT: \n{output}\n\n")
